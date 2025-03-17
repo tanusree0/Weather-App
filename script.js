@@ -1,7 +1,8 @@
-const apiKey = "c55f146bd9e10bd2d122a21fc8119411";
+const apiKey = "c55f146bd9e10bd2d122a21fc8119411"; // Your working API key
 
 async function getWeather() {
-    let city = document.getElementById("cityInput").value;
+    let city = document.getElementById("cityInput").value.trim();
+
     if (city === "") {
         alert("Please enter a city name!");
         return;
@@ -13,15 +14,17 @@ async function getWeather() {
         let response = await fetch(url);
         let data = await response.json();
 
-        if (data.cod === 200) {
+        if (response.ok) {
             document.getElementById("weatherInfo").innerHTML = `
                 <h2>${data.name}, ${data.sys.country}</h2>
-                <p>Temperature: ${data.main.temp}°C</p>
-                <p>Condition: ${data.weather[0].description}</p>
-                <p>Humidity: ${data.main.humidity}%</p>
+                <p><strong>Temperature:</strong> ${data.main.temp}°C</p>
+                <p><strong>Feels Like:</strong> ${data.main.feels_like}°C</p>
+                <p><strong>Condition:</strong> ${data.weather[0].description}</p>
+                <p><strong>Humidity:</strong> ${data.main.humidity}%</p>
+                <p><strong>Wind Speed:</strong> ${data.wind.speed} m/s</p>
             `;
         } else {
-            document.getElementById("weatherInfo").innerHTML = `<p>City not found!</p>`;
+            document.getElementById("weatherInfo").innerHTML = `<p>Error: ${data.message}</p>`;
         }
     } catch (error) {
         console.error("Error fetching data:", error);
