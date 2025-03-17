@@ -6,7 +6,8 @@ document.getElementById('getWeatherBtn').addEventListener('click', function () {
     }
   
     const apiKey = "07403c9fdc604acaad171941250803";
-    const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+   const url = `https://cors-anywhere.herokuapp.com/https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+
   
     fetch(url)
       .then(response => response.json())
