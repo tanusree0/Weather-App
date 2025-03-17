@@ -1,33 +1,30 @@
-document.getElementById('getWeatherBtn').addEventListener('click', function () {
-    const location = document.getElementById('location').value;
-    if (location === "") {
-      alert("Please enter a location.");
-      return;
-    }
-  
-    const apiKey = "07403c9fdc604acaad171941250803";
-   const url = `https://cors-anywhere.herokuapp.com/https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+const apiKey = "c55f146bd9e10bd2d122a21fc8119411";
 
-  
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        if (data.error) {
-          alert("Location not found. Please try again.");
+async function getWeather() {
+    let city = document.getElementById("cityInput").value;
+    if (city === "") {
+        alert("Please enter a city name!");
+        return;
+    }
+
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+    try {
+        let response = await fetch(url);
+        let data = await response.json();
+
+        if (data.cod === 200) {
+            document.getElementById("weatherInfo").innerHTML = `
+                <h2>${data.name}, ${data.sys.country}</h2>
+                <p>Temperature: ${data.main.temp}°C</p>
+                <p>Condition: ${data.weather[0].description}</p>
+                <p>Humidity: ${data.main.humidity}%</p>
+            `;
         } else {
-          const locationName = `${data.location.name}, ${data.location.country}`;
-          const temperature = data.current.temp_c;
-          const condition = data.current.condition.text;
-  
-          // Update the HTML with location, temperature, and condition
-          document.getElementById('locationName').textContent = locationName;
-          document.getElementById('temperature').textContent = `Temperature: ${temperature}°C`;
-          document.getElementById('condition').textContent = `Condition: ${condition}`;
+            document.getElementById("weatherInfo").innerHTML = `<p>City not found!</p>`;
         }
-      })
-      .catch(error => {
-        console.error('Error fetching weather data:', error);
-        alert('An error occurred. Please try again later.');
-      });
-  });
-  
+    } catch (error) {
+        console.error("Error fetching data:", error);
+        document.getElementById("weatherInfo").innerHTML = `<p>Failed to fetch weather data.</p>`;
+    }
+}
